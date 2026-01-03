@@ -1,0 +1,4 @@
+yq
+gh
+rclone
+chezmoi --classic

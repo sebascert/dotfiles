@@ -1,0 +1,11 @@
+.rgignore
+
+/.idea/
+/.vscode/
+
+# mermaidjs
+puppeteer-config.json
+
+# clangdb
+.cache/clangd/
+compile_commands.json
