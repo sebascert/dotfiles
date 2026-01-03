@@ -1,0 +1,62 @@
+export XDG_CONFIG_HOME="$HOME/.config"
+
+# if not running interactively, don't do anything
+[[ $- != *i* ]] && return
+
+# set vi prompt mode
+set -o vi
+
+# set editor and pager
+export EDITOR=nvim
+export MANPAGER='nvim +Man!'
+
+# load bash env
+[ -f "$HOME/.local/bin/env" ] && source "$HOME/.local/bin/env"
+[ -d "$HOME/.bash.d" ] && {
+    while IFS= read -r -d '' src; do
+        source "$src"
+    done < <(find "$HOME/.bash.d" -type f -name '*.sh' -print0)
+}
+
+# load bash completion
+if ! shopt -oq posix; then
+    if [ -f /usr/share/bash-completion/bash_completion ]; then
+        source /usr/share/bash-completion/bash_completion
+    elif [ -f /etc/bash_completion ]; then
+        source /etc/bash_completion
+    fi
+fi
+
+# history configs
+HISTCONTROL=ignoreboth
+shopt -s histappend
+HISTSIZE=1000
+HISTFILESIZE=2000
+
+# check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
+
+# make less more friendly for non-text input files, see lesspipe(1)
+[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
+# enable color support for utils
+if [ -x /usr/bin/dircolors ]; then
+    if [ -r "$HOME/.dircolors" ]; then
+        eval "$(dircolors -b "$HOME/.dircolors")"
+    else
+        eval "$(dircolors -b)"
+    fi
+
+    alias ls='ls --color=auto'
+    alias dir='dir --color=auto'
+    alias vdir='vdir --color=auto'
+
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+fi
+
+# GCC
+ulimit -c unlimited
+export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'

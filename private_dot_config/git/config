@@ -1,0 +1,47 @@
+[user]
+    name = Sebastian Certuche
+    email = sebascertuche@gmail.com
+    signkey = ed25519
+
+[alias]
+    co = checkout
+    br = branch
+    ci = commit
+    st = status
+    s = status -s
+    df = diff --name-only
+    ft = fetch --prune
+    pf = push --force
+    pd = push --delete
+    pu = git push --set-upstream origin $(git symbolic-ref --short HEAD)
+    conf = config --global
+    lg = log --graph --oneline
+    lgg = log --graph --oneline --all
+    last = log -1 HEAD
+    amend = commit --amend --no-edit
+    save = "!git add -A && git commit -m 'Savepoint'"
+    aliases = config --get-regexp alias
+    remote-url = remote get-url origin
+
+[core]
+    editor = nvim -c 'colorscheme tokyonight-night'
+    excludesFile = ~/.config/git/ignore
+[credential "https://github.com"]
+    helper =
+    helper = !/usr/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+    helper =
+    helper = !/usr/bin/gh auth git-credential
+[init]
+    defaultBranch = main
+[filter "lfs"]
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
+[diff]
+    submodule = log
+[status]
+    submodulesummary = 1
+[merge]
+    conflictstyle = diff3

@@ -1,0 +1,22 @@
+# colors
+set recolor
+
+set default-bg '#101010'
+set recolor-lightcolor '#202020'
+set recolor-darkcolor '#b0b0b0'
+
+# copy to clipboard
+set selection-clipboard clipboard
+
+# default view
+set guioptions " "
+
+set pages-per-row 2
+
+set window-width 1920
+set window-height 1080
+
+# fullscreen map
+unmap f
+map f toggle_fullscreen
+map [fullscreen] f toggle_fullscreen
