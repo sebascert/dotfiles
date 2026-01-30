@@ -1,7 +1,3 @@
-require("profiles.cp")
-
-require("config.set")
-require("config.remap")
-require("config.configs")
-require("config.filetype")
-require("config.lazy")
+require("core")
+require("pkg.lazy")
+-- require("lsp")

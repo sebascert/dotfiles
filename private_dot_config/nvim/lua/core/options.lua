@@ -46,4 +46,5 @@ vim.opt.updatetime = 50
 
 vim.opt.colorcolumn = "100"
 
+-- always use clipboard as yank buffer
 -- vim.opt.clipboard:append("unnamedplus")

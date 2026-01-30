@@ -54,20 +54,15 @@ keymap(
     { noremap = true, silent = true }
 )
 
--- keymap("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
+keymap("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 
 -- buffer operations
-keymap("n", "<leader>bn", vim.cmd.bn)
-keymap("n", "<leader>bp", vim.cmd.bp)
-keymap("n", "<leader>bls", vim.cmd.ls)
-keymap("n", "<leader>bd", vim.cmd.bd)
-
 keymap("n", "<C-PageUp>", vim.cmd.bn)
 keymap("n", "<C-PageDown>", vim.cmd.bp)
 
 keymap("n", "<leader><leader>", vim.cmd.so)
 
-cmd("Bcppath", function()
+cmd("Path", function()
     vim.fn.setreg("+", vim.fn.expand("%:p"))
 end, {})
 

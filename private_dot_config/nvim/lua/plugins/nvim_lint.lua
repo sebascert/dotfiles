@@ -1,17 +1,8 @@
-if vim.g.linting == nil then
-    vim.g.linting = true
-end
 
-function LintingStatus()
-    if vim.g.linting then
-        print("linting")
-    else
-        print("not linting")
-    end
-end
+vim.g.LINTING = true
 
-function ToggleLinting(enable)
-    vim.g.linting = enable
+local function ToggleLinting(enable)
+    vim.g.LINTING = enable
     if enable then
         Lint()
     else
@@ -19,19 +10,13 @@ function ToggleLinting(enable)
     end
 end
 
-local function debounce(ms, fn)
-    local timer = vim.uv.new_timer()
-    return function(...)
-        local argv = { ... }
-        timer:start(ms, 0, function()
-            timer:stop()
-            vim.schedule_wrap(fn)(unpack(argv))
-        end)
-    end
-end
-
 function Lint()
-    -- Use nvim-lint"s logic first:
+    vim.print("lint attempt")
+    if not LINTING then
+        return
+    end
+
+    -- Use nvim-lint's logic first:
     -- * checks if linters exist for the full filetype first
     -- * otherwise will split filetype by "." and add all those linters
     -- * this differs from conform.nvim which only uses the first filetype that has a formatter
@@ -49,7 +34,7 @@ function Lint()
     -- Add global linters.
     vim.list_extend(names, lint.linters_by_ft["*"] or {})
 
-    -- Filter out linters that don"t exist or don"t match the condition.
+    -- Filter out linters that don't exist or don't match the condition.
     local ctx = { filename = vim.api.nvim_buf_get_name(0) }
     ctx.dirname = vim.fn.fnamemodify(ctx.filename, ":h")
     names = vim.tbl_filter(function(name)
@@ -63,80 +48,72 @@ function Lint()
     end
 end
 
-function GetLinters()
-    local linters = require("lint").get_running()
-    if #linters == 0 then
-        return "no linters"
-    end
-    return "󱉶 " .. table.concat(linters, ", ")
-end
-
-local function linters_config()
-    local linters = require("lint").linters
-
-    linters.shellcheck.args = {
-        "--format",
-        "json",
-        "--shell",
-        "bash",
-        "-",
-    }
-end
-
 local function config(_, opts)
     local lint = require("lint")
+    local time=require("utils.time")
 
     lint.linters_by_ft = opts.linters_by_ft
 
+    -- load linter configs
+    if opts.linters then
+        for name, conf in pairs(opts.linters) do
+            local linter = lint.linters[name]
+            for key, value in pairs(conf) do
+                linter[key] = value
+            end
+        end
+    end
+
+    -- create au on configured events
     vim.api.nvim_create_autocmd(opts.events, {
         group = vim.api.nvim_create_augroup("nvim-lint", { clear = true }),
         callback = function()
-            if not vim.g.linting then
-                return
-            end
-            debounce(100, Lint)()
+            time.debounce(100, Lint)()
         end,
     })
 
-    linters_config()
-
-    -- Define a keymap for FX that executes a Lua function
-    vim.keymap.set("n", "<F1>", function()
-        Lint()
-    end)
-
+    -- command interface
     local cmd = vim.api.nvim_create_user_command
-    cmd("Lint", function()
-        Lint()
-    end, { nargs = 0 })
-    cmd("LintEnable", function()
-        ToggleLinting(true)
-    end, { nargs = 0 })
-    cmd("LintDisable", function()
-        ToggleLinting(false)
-    end, { nargs = 0 })
-    cmd("GetLinters", function()
-        print(GetLinters())
-    end, { nargs = 0 })
+    cmd("Lint", Lint, {});
+    cmd("LintEnable", function() ToggleLinting(true) end, {})
+    cmd("LintDisable", function() ToggleLinting(false) end, {})
+    cmd("Linters", function()
+        vim.print(table.concat(lint.get_running(),", "))
+    end, {})
 end
 
 return {
     "mfussenegger/nvim-lint",
     opts = {
-        -- Event to trigger linters
         events = { "BufReadPost", "BufWritePost", "TextChanged", "TextChangedI" },
         linters_by_ft = {
-            python = { "mypy" },
-            rust = { "rust-analyzer" },
             lua = { "stylua" },
-            bash = { "shellcheck" },
+
+            python = { "mypy" },
+
             sh = { "shellcheck" },
+            bash = { "shellcheck" },
+
             c = { "clangtidy" },
             cpp = { "clangtidy" },
+
             make = { "checkmake" },
+
             tex = { "vale" },
+
             ["*"] = { "codespell" },
         },
+        linters ={
+            shellcheck = {
+                args = {
+                    "--format",
+                    "json",
+                    "--shell",
+                    "bash",
+                    "-",
+                }
+            }
+        }
     },
     config = config,
 }

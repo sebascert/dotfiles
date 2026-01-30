@@ -1,5 +1,6 @@
 return {
     "nvim-treesitter/nvim-treesitter",
+    lazy=false,
     build = ":TSUpdate",
     opts = {
         highlight = {
@@ -10,40 +11,30 @@ return {
             },
         },
         ensure_installed = {
-            -- Languages
+            "bash",
             "c",
             "cpp",
-            "python",
-            "rust",
-            "lua",
             "c_sharp",
-            "matlab",
-            -- terminal utils
-            "bash",
-            "powershell",
-            "ssh_config",
-            "make",
-            "sql",
-            -- webshit
-            "javascript",
-            "html",
             "css",
-            -- utils
+            "heex",
+            "html",
+            "javascript",
+            "lua",
+            "make",
             "markdown",
+            "matlab",
+            "powershell",
+            "python",
+            "query",
+            "rust",
+            "sql",
+            "ssh_config",
             "vim",
             "vimdoc",
-            "query",
-            "heex",
         },
 
         sync_install = false,
         auto_install = true,
         indent = { enable = true },
     },
-
-    config = function(_, opts)
-        local configs = require("nvim-treesitter.configs")
-
-        configs.setup(opts)
-    end,
 }

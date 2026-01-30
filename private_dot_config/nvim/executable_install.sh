@@ -13,7 +13,7 @@
 
 set -euo pipefail
 
-NVIM_VERSION="0.10.3"
+NVIM_VERSION="0.11.5"
 TAG="v${NVIM_VERSION}"
 REPO_URL="https://github.com/neovim/neovim"
 PREFIX="/usr/local"

@@ -53,14 +53,4 @@ return {
             map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", "GitSigns Select Hunk")
         end,
     },
-    config = function(_, opts)
-        require("gitsigns").setup(opts)
-        -- vim.api.nvim_set_hl(0, "GitSignsAdd", { fg = "lightgreen" })
-        -- vim.api.nvim_set_hl(0, "GitSignsChange", { fg = "lightblue" })
-        -- vim.api.nvim_set_hl(0, "GitSignsDelete", { fg = "lightred" })
-
-        -- vim.api.nvim_set_hl(0, "GitSignsStaggedAdd", { fg = "lightgreen" })
-        -- vim.api.nvim_set_hl(0, "GitSignsStaggedChange", { fg = "lightblue" })
-        -- vim.api.nvim_set_hl(0, "GitSignsStaggedDelete", { fg = "tred" })
-    end
 }
