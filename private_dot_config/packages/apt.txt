@@ -6,7 +6,6 @@ build-essential
 calc
 cdecl
 clang
-clang-format
 clang-tidy
 cmake
 cpio
