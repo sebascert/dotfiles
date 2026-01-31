@@ -13,16 +13,12 @@
 
 set -euo pipefail
 
-NVIM_VERSION="0.11.5"
-TAG="v${NVIM_VERSION}"
-REPO_URL="https://github.com/neovim/neovim"
-PREFIX="/usr/local"
-BUILD_TYPE="Release"
-
-echo "Building Neovim ${TAG}"
-echo
-
 # sanity checks
+if [ $# -ne 1 ]; then
+    echo "Missing version" >&2
+    exit 1
+fi
+
 for cmd in git cmake make curl; do
     command -v "$cmd" >/dev/null 2>&1 || {
         echo "Missing: $cmd" >&2
@@ -30,6 +26,18 @@ for cmd in git cmake make curl; do
     }
 done
 
+# clean previous installation user files
+rm -rf "$HOME/.cache/nvim"
+rm -rf "$HOME/.local/share/nvim"
+rm -rf "$HOME/.local/state/nvim"
+
+NVIM_VERSION="$1"
+TAG="v${NVIM_VERSION}"
+REPO_URL="https://github.com/neovim/neovim"
+PREFIX="/usr/local"
+BUILD_TYPE="Release"
+
+# create temporary workdir
 WORKDIR="$(mktemp -d -t nvim-build-XXXXXXXX)"
 
 cleanup() {
@@ -39,13 +47,16 @@ trap cleanup EXIT
 
 cd "$WORKDIR"
 
+# download source and build
 git clone --depth 1 --branch "$TAG" "$REPO_URL" neovim
 cd neovim
 
 make CMAKE_BUILD_TYPE="$BUILD_TYPE"
-
 sudo make CMAKE_INSTALL_PREFIX="$PREFIX" install
 
-make distclean >/dev/null 2>&1 || true
-
-$PREFIX/bin/nvim --version
+# install nvim lazy and mason packages
+nvim --headless \
+    -c "lua require('lazy').sync({ wait = true, show = false })"\
+    -c "MasonUpdate"\
+    -c "MasonLockRestore"\
+    -c "qa"
