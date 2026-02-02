@@ -1,7 +1,7 @@
 return {
     "nvim-lualine/lualine.nvim",
     dependencies = {
-        "nvim-tree/nvim-web-devicons"
+        "nvim-tree/nvim-web-devicons",
     },
     opts = {
         options = {
@@ -20,7 +20,7 @@ return {
                 statusline = 1000,
                 tabline = 1000,
                 winbar = 1000,
-            }
+            },
         },
         sections = {
             lualine_a = { "mode" },
@@ -28,7 +28,7 @@ return {
             lualine_c = { { "filename", path = 1 } },
             lualine_x = { "encoding", "fileformat", "filetype" },
             lualine_y = { "progress" },
-            lualine_z = { "location" }
+            lualine_z = { "location" },
         },
         inactive_sections = {
             lualine_a = {},
@@ -36,12 +36,12 @@ return {
             lualine_c = { "filename" },
             lualine_x = { "location" },
             lualine_y = {},
-            lualine_z = {}
+            lualine_z = {},
         },
         tabline = {},
         winbar = {},
         inactive_winbar = {},
-        extensions = {}
+        extensions = {},
     },
     config = true,
 }

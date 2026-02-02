@@ -13,7 +13,7 @@ return {
             sh = { "beautysh" },
             bash = { "beautysh" },
 
-            sql = { "sqlfmt" },
+            toml = { "tombi" },
 
             scheme = { "dprint" },
             markdown = { "dprint" },
@@ -26,7 +26,7 @@ return {
             injected = { options = { ignore_errors = true } },
 
             dprint = {
-                 -- use dprint only when a dprint.json file is present
+                -- use dprint only when a dprint.json file is present
                 condition = function(ctx)
                     return vim.fs.find(
                         { "dprint.json" },

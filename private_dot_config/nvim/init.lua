@@ -1,3 +1,3 @@
 require("core")
-require("pkg.lazy")
+require("pkg")
 -- require("lsp")

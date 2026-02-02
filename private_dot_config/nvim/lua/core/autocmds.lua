@@ -1,9 +1,9 @@
 local autocmd = vim.api.nvim_create_autocmd
-local group = vim.api.nvim_create_augroup("", { clear = true })
+local group = vim.api.nvim_create_augroup("user-core", { clear = true })
 
 -- highlight on yank
 autocmd("TextYankPost", {
-    group=group,
+    group = group,
     pattern = "*",
     callback = function()
         vim.highlight.on_yank({
@@ -14,9 +14,9 @@ autocmd("TextYankPost", {
 })
 
 -- filetype mappings
-local filetype=require("utils.filetype")
+local filetype = require("utils.filetype")
 autocmd({ "BufRead", "BufNewFile" }, {
-    group=group,
+    group = group,
     pattern = "*",
-    callback = filetype.resolve_filetype
+    callback = filetype.resolve_filetype,
 })

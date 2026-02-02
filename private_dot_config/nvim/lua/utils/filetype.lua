@@ -1,4 +1,4 @@
-local M={}
+local M = {}
 
 local resolvers = {
     { -- shebang
@@ -10,8 +10,10 @@ local resolvers = {
                 return
             end
 
-            if string.match(first_line, "bash") or
-                string.match(first_line, "sh") then
+            if
+                string.match(first_line, "bash")
+                or string.match(first_line, "sh")
+            then
                 return "sh"
             elseif string.match(first_line, "python") then
                 return "python"
@@ -34,39 +36,28 @@ local resolvers = {
 }
 
 ---Resolves vim.bo.filetype via resolvers with priority.
----@error Raised on resolver's conflict.
+---@error Raised on resolver conflict.
 function M.resolve_filetype()
-        local filetype = ""
-        local priority = 0
+    local best_ft = nil
+    local best_prio = -math.huge
 
-        for _, mapping in pairs(resolvers) do
-            if mapping.priority < priority then
-                goto continue
-            end
-
-            local mapped = mapping.map()
-            if mapped == nil then
-                goto continue
-            end
-
-            if mapping.priority > priority then
-                priority = mapping.priority
-                filetype = mapped
-            elseif mapping.priority == priority then
-                if filetype == mapped then
-                    goto continue
-                end
-
+    for _, resolver in pairs(resolvers) do
+        local mapped = resolver.map()
+        if mapped ~= nil then
+            if resolver.priority > best_prio then
+                best_prio = resolver.priority
+                best_ft = mapped
+            elseif resolver.priority == best_prio and best_ft ~= mapped then
                 error("filetype determination conflict")
-                error("incompatible " .. filetype " and " .. mapped)
+                error("incompatible " .. best_ft .. " and " .. mapped)
                 return
             end
-            ::continue::
-        end
-
-        if priority ~= 0 then
-            vim.bo.filetype = filetype
         end
     end
+
+    if best_ft ~= nil then
+        vim.bo.filetype = best_ft
+    end
+end
 
 return M

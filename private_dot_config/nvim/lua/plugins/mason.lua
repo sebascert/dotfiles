@@ -1,4 +1,4 @@
 return {
-        "williamboman/mason.nvim",
-        lazy=false,
+    "mason-org/mason.nvim",
+    opts = {},
 }

@@ -4,6 +4,8 @@ vim.opt.guicursor = ""
 vim.opt.nu = true
 vim.opt.relativenumber = true
 
+vim.opt.colorcolumn = "100"
+
 -- WHITESPACE
 vim.opt.list = true
 vim.opt.listchars = {
@@ -43,8 +45,6 @@ vim.opt.signcolumn = "yes:2"
 vim.opt.isfname:append("@-@")
 
 vim.opt.updatetime = 50
-
-vim.opt.colorcolumn = "100"
 
 -- always use clipboard as yank buffer
 -- vim.opt.clipboard:append("unnamedplus")
