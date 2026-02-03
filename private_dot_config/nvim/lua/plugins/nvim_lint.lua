@@ -114,7 +114,10 @@ return {
         linters_by_ft = {
             lua = { "selene" },
 
-            python = { "mypy" },
+            c = { "clangtidy" },
+            cpp = { "clangtidy" },
+
+            python = { "mypy", "ruff" },
 
             sh = { "shellcheck" },
             bash = { "shellcheck" },
@@ -122,6 +125,7 @@ return {
             make = { "checkmake" },
 
             tex = { "vale" },
+            markdown = { "vale" },
 
             ["*"] = { "codespell" },
         },

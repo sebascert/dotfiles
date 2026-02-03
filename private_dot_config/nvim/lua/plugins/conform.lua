@@ -8,6 +8,11 @@ return {
         formatters_by_ft = {
             rust = { "rustfmt" },
 
+            c = { "clang-format" },
+            cpp = { "clang-format" },
+
+            python = { "ruff_format", "ruff_organize_imports" },
+
             lua = { "stylua" },
 
             sh = { "beautysh" },
