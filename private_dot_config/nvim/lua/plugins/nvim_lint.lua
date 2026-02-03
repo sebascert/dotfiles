@@ -1,25 +1,12 @@
-
 vim.g.LINTING = true
 
-local function ToggleLinting(enable)
-    vim.g.LINTING = enable
-    if enable then
-        Lint()
-    else
-        vim.diagnostic.reset()
-    end
-end
-
-function Lint()
-    vim.print("lint attempt")
-    if not LINTING then
-        return
-    end
-
+local function get_running()
+    -- inspired from https://www.lazyvim.org/plugins/linting#nvim-lint
     -- Use nvim-lint's logic first:
     -- * checks if linters exist for the full filetype first
     -- * otherwise will split filetype by "." and add all those linters
     -- * this differs from conform.nvim which only uses the first filetype that has a formatter
+
     local lint = require("lint")
     local names = lint._resolve_linter_by_ft(vim.bo.filetype)
 
@@ -39,63 +26,98 @@ function Lint()
     ctx.dirname = vim.fn.fnamemodify(ctx.filename, ":h")
     names = vim.tbl_filter(function(name)
         local linter = lint.linters[name]
-        return linter and not (type(linter) == "table" and linter.condition and not linter.condition(ctx))
+        return linter
+            and not (
+                type(linter) == "table"
+                and linter.condition
+                and not linter.condition(ctx)
+            )
     end, names)
 
-    -- Run linters.
+    return names
+end
+
+local function try_lint()
+    if not vim.g.LINTING then
+        return
+    end
+
+    local lint = require("lint")
+
+    local names = get_running()
     if #names > 0 then
         lint.try_lint(names)
     end
 end
 
-local function config(_, opts)
+local function configure_linters(opts)
     local lint = require("lint")
-    local time=require("utils.time")
 
     lint.linters_by_ft = opts.linters_by_ft
 
-    -- load linter configs
-    if opts.linters then
-        for name, conf in pairs(opts.linters) do
-            local linter = lint.linters[name]
-            for key, value in pairs(conf) do
-                linter[key] = value
+    for name, linter in pairs(opts.linters) do
+        if type(linter) == "table" and type(lint.linters[name]) == "table" then
+            lint.linters[name] =
+                vim.tbl_deep_extend("force", lint.linters[name], linter)
+            if type(linter.prepend_args) == "table" then
+                lint.linters[name].args = lint.linters[name].args or {}
+                vim.list_extend(lint.linters[name].args, linter.prepend_args)
+            end
+        else
+            lint.linters[name] = linter
+        end
+    end
+end
+
+local function config(_, opts)
+    local time = require("utils.time")
+
+    configure_linters(opts)
+
+    local debounced_lint = time.debounce(100, try_lint)
+
+    local function toggle_linting(state)
+        return function()
+            vim.g.LINTING = state
+            if not state then
+                vim.diagnostic.reset()
             end
         end
     end
 
     -- create au on configured events
+    local augroup = vim.api.nvim_create_augroup("nvim-lint", { clear = true })
     vim.api.nvim_create_autocmd(opts.events, {
-        group = vim.api.nvim_create_augroup("nvim-lint", { clear = true }),
-        callback = function()
-            time.debounce(100, Lint)()
-        end,
+        group = augroup,
+        callback = debounced_lint,
     })
 
     -- command interface
     local cmd = vim.api.nvim_create_user_command
-    cmd("Lint", Lint, {});
-    cmd("LintEnable", function() ToggleLinting(true) end, {})
-    cmd("LintDisable", function() ToggleLinting(false) end, {})
+    cmd("Lint", debounced_lint, {})
+    cmd("LintEnable", toggle_linting(true), {})
+    cmd("LintDisable", toggle_linting(false), {})
     cmd("Linters", function()
-        vim.print(table.concat(lint.get_running(),", "))
+        vim.print(get_running())
     end, {})
 end
 
 return {
     "mfussenegger/nvim-lint",
     opts = {
-        events = { "BufReadPost", "BufWritePost", "TextChanged", "TextChangedI" },
+        events = {
+            "BufReadPost",
+            "BufWritePost",
+            "TextChanged",
+            "TextChangedI",
+        },
         linters_by_ft = {
-            lua = { "stylua" },
+            lua = { "selene" },
 
             python = { "mypy" },
 
             sh = { "shellcheck" },
             bash = { "shellcheck" },
-
-            c = { "clangtidy" },
-            cpp = { "clangtidy" },
 
             make = { "checkmake" },
 
@@ -103,17 +125,11 @@ return {
 
             ["*"] = { "codespell" },
         },
-        linters ={
+        linters = {
             shellcheck = {
-                args = {
-                    "--format",
-                    "json",
-                    "--shell",
-                    "bash",
-                    "-",
-                }
-            }
-        }
+                prepend_args = { "--shell", "bash" },
+            },
+        },
     },
     config = config,
 }
