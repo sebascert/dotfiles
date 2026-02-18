@@ -11,6 +11,9 @@ Examples:
 
   ghraw https://github.com/user/repo/blob/main/path/to/file.txt
       Downloads the raw file at the specified path.
+
+  ghraw https://gist.github.com/user/hash
+      Downloads the raw gist.
 EOF
     }
 
@@ -51,6 +54,13 @@ EOF
         branch="${BASH_REMATCH[3]}"
         path="${BASH_REMATCH[4]}"
         raw_url="https://raw.githubusercontent.com/$user/$repo/$branch/$path"
+        curl -L "$raw_url"
+
+    elif [[ "$url" =~ ^https://gist.github.com/([^/]+)/([0-9a-fA-F]+) ]]; then
+        # gist page URL
+        user="${BASH_REMATCH[1]}"
+        gist="${BASH_REMATCH[2]}"
+        raw_url="https://gist.githubusercontent.com/$user/$gist/raw"
         curl -L "$raw_url"
 
     else
