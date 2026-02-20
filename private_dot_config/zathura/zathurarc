@@ -3,7 +3,7 @@ set recolor
 
 set default-bg '#101010'
 set recolor-lightcolor '#202020'
-set recolor-darkcolor '#b0b0b0'
+set recolor-darkcolor '#e6e6e6'
 
 # copy to clipboard
 set selection-clipboard clipboard

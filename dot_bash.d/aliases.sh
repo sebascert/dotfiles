@@ -37,3 +37,4 @@ alias ccp='xclip -selection clipboard'
 alias cpt='xclip -selection clipboard -o'
 
 alias cnow='date +"%H:%M" | xclip -selection clipboard'
+alias today='date +"%d-%m-%Y" | xclip -selection clipboard'
