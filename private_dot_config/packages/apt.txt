@@ -37,9 +37,10 @@ lldb
 m4
 make
 manpages-dev
+maven
 meson
 ninja-build
-openjdk-21-jdk
+openjdk-25-jdk
 openssh-server
 pandoc
 perl-doc

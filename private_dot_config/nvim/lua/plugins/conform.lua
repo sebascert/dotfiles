@@ -20,6 +20,8 @@ return {
 
             toml = { "tombi" },
 
+            java = { "google-java-format" },
+
             scheme = { "dprint" },
             markdown = { "dprint" },
 

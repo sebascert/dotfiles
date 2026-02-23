@@ -124,6 +124,8 @@ return {
 
             make = { "checkmake" },
 
+            java = { "checkstyle" },
+
             tex = { "vale" },
             markdown = { "vale" },
 
