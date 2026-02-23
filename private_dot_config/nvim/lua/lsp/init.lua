@@ -1,3 +1,8 @@
+local capabilities = require("cmp_nvim_lsp").default_capabilities()
+vim.lsp.config("*", {
+    capabilities = capabilities,
+})
+
 -- LUA
 vim.lsp.enable("lua_ls")
 
@@ -18,7 +23,8 @@ vim.lsp.enable("eslint")
 vim.lsp.enable("jdtls")
 
 -- C#
--- "roslyn",
+-- vim.lsp.enable("roslyn")
+
 -- BASH
 vim.lsp.enable("bashls")
 
