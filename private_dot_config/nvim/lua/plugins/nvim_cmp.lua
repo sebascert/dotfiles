@@ -16,10 +16,10 @@ local function config()
             ["<C-f>"] = cmp.mapping.scroll_docs(-4),
             ["<C-b>"] = cmp.mapping.scroll_docs(4),
 
-            ["<C-n>"] = cmp.mapping.select_next_item({
+            ["<C-j>"] = cmp.mapping.select_next_item({
                 behavior = cmp.SelectBehavior.Select,
             }),
-            ["<C-p>"] = cmp.mapping.select_prev_item({
+            ["<C-k>"] = cmp.mapping.select_prev_item({
                 behavior = cmp.SelectBehavior.Select,
             }),
 
@@ -45,23 +45,23 @@ local function config()
     require("cmp_git").setup()
 
     -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
-    cmp.setup.cmdline({ "/", "?" }, {
-        mapping = cmp.mapping.preset.cmdline(),
-        sources = {
-            { name = "buffer" },
-        },
-    })
+    -- cmp.setup.cmdline({ "/", "?" }, {
+    --     mapping = cmp.mapping.preset.cmdline(),
+    --     sources = {
+    --         { name = "buffer" },
+    --     },
+    -- })
 
     -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
-    cmp.setup.cmdline(":", {
-        mapping = cmp.mapping.preset.cmdline(),
-        sources = cmp.config.sources({
-            { name = "path" },
-        }, {
-            { name = "cmdline" },
-        }),
-        matching = { disallow_symbol_nonprefix_matching = false },
-    })
+    -- cmp.setup.cmdline(":", {
+    --     mapping = cmp.mapping.preset.cmdline(),
+    --     sources = cmp.config.sources({
+    --         { name = "path" },
+    --     }, {
+    --         { name = "cmdline" },
+    --     }),
+    --     matching = { disallow_symbol_nonprefix_matching = false },
+    -- })
 end
 
 return {
