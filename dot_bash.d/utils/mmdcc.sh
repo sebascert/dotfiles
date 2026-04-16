@@ -41,15 +41,21 @@ EOF
             ;;
     esac
 
-    mflags=("$@")
-
     cd "$(dirname "$source")" || return 1
     diagram_file="$(basename "$source")"
 
     [[ -z "$outformat" ]] && outformat="png"
 
+    mflags=(
+        --input "$diagram_file"
+        --outputFormat "$outformat"
+        --puppeteerConfigFile "$PCONF"
+        --iconPacks @iconify-json/logos
+        "$@"
+    )
+
     run() {
-        mmdc -i "$diagram_file" -e "$outformat" -p "$PCONF" "${mflags[@]}" || {
+        mmdc "${mflags[@]}" || {
             echo "failed mmdc compilation" >&2
             return 2
         }
