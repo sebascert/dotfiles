@@ -2,7 +2,7 @@
 # python3
 # virtualenv
 
-venv-activate() {
+pyvenv-activate() {
     local status=""
     local venv_dirs=(".pyvenv" ".venv" "venv")
     local current_dir venv=""
