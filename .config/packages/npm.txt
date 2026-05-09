@@ -1,0 +1,4 @@
+@iconify-json/logos@1.2.10
+mermaid-filter
+@mermaid-js/mermaid-cli
+repomix
