@@ -15,9 +15,9 @@ export MANPAGER='nvim +Man!'
 BASH_DIRS=(
     "$HOME/.bash/core"
     "$HOME/.bash/config"
+    "$HOME/.bash/completion"
     "$HOME/.bash/cli"
     "$HOME/.bash/util"
-    "$HOME/.bash/completion"
 )
 for dir in "${BASH_DIRS[@]}"; do
     while IFS= read -r -d '' src;do
