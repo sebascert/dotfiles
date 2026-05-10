@@ -11,7 +11,7 @@ export EDITOR=nvim
 export MANPAGER='nvim +Man!'
 
 # load bash env
-[ -f "$HOME/.local/bin/env" ] && source "$HOME/.local/bin/env"
+source "$HOME/.local/bin/env"
 BASH_DIRS=(
     "$HOME/.bash/core"
     "$HOME/.bash/config"

@@ -1,5 +1,5 @@
 # source local env (PATH exports, tokens, etc.)
-[ -f "$HOME/.local/bin/env" ] && source "$HOME/.local/bin/env"
+source "$HOME/.local/bin/env"
 
 # start ssh-agent if not running
 if [ -z "${SSH_AGENT_PID:-}" ]; then
