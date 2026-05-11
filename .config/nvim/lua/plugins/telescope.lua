@@ -10,8 +10,8 @@ local function find_files_cmd()
     local cmd = {
         "rg",
         "--files",
-        "--color",
-        "never",
+        "--follow",
+        "--color=never",
         "--hidden",
         "--no-ignore-vcs",
     }
@@ -29,14 +29,16 @@ local function live_grep_cmd()
     -- These are Telescope's defaults, but explicitly rg-based and with your globs added.
     local args = {
         "rg",
+        "--follow",
         "--color=never",
+        "--hidden",
+        "--no-ignore-vcs",
+
         "--no-heading",
         "--with-filename",
         "--line-number",
         "--column",
         "--smart-case",
-        "--hidden",
-        "--no-ignore-vcs",
     }
 
     for _, pattern in ipairs(rg_find_patterns) do
