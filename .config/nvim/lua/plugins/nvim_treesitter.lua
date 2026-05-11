@@ -4,17 +4,26 @@ local function config(_, opts)
     local TS = require("nvim-treesitter")
 
     TS.setup(opts)
-
     TS.install(opts.parsers)
 
     local augroup =
         vim.api.nvim_create_augroup("nvim-treesitter-config", { clear = true })
+
     vim.api.nvim_create_autocmd("FileType", {
         pattern = "*",
         group = augroup,
         callback = function(args)
             local bufnr = args.buf
+            if not vim.api.nvim_buf_is_valid(bufnr) then
+                return
+            end
+
             local ft = vim.bo[bufnr].filetype
+            local bt = vim.bo[bufnr].buftype
+            if ft == "" or bt ~= "" then
+                return
+            end
+
             local lang = vim.treesitter.language.get_lang(ft) or ft
 
             -- only start if a parser exists/loads successfully
@@ -41,7 +50,6 @@ return {
     lazy = false,
     build = ":TSUpdate",
     config = config,
-
     opts = {
         -- default
         install_dir = vim.fn.stdpath("data") .. "/site",
@@ -95,7 +103,6 @@ return {
             "tmux",
             "toml",
             "typescript",
-            "vim",
             "vim",
             "xml",
             "yaml",
