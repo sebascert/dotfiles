@@ -1,6 +1,7 @@
+DOCC_DIR="${HOME}/docc"
+DOCC_REPO="https://github.com/sebascert/docc.git"
+
 docc() {
-    local DOCC_DIR="${HOME}/docc"
-    local DOCC_REPO="https://github.com/sebascert/docc.git"
     local new_docc
 
     usage() {
@@ -55,3 +56,23 @@ EOF
         nwin "nvim src/body.md"
     )
 }
+
+_docc_completion() {
+    local cur base
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    base="$DOCC_DIR"
+
+    if [[ $COMP_CWORD -eq 1 && -d "$base" ]]; then
+        local dirs=() d
+        shopt -s nullglob
+        for d in "$base"/*/; do
+            dirs+=( "${d%/}" )
+        done
+        shopt -u nullglob
+
+        COMPREPLY=( $(compgen -W "${dirs[*]##*/}" -- "$cur") )
+    fi
+}
+
+complete -F _docc_completion docc
