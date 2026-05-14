@@ -1,1 +1,0 @@
-/home/sebastian/projects/backup/backup-env.sh
