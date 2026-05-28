@@ -23,7 +23,7 @@ for dir in "${BASH_DIRS[@]}"; do
     while IFS= read -r -d '' src;do
         source "$src"
         done < <(
-        find "$dir" -type f -name '*.sh' -print0 | sort -z
+        find "$dir" \( -type f -o -type l \) -name '*.sh' -print0 | sort -z
     )
 done
 
