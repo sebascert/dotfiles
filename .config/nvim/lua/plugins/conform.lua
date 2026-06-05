@@ -19,6 +19,7 @@ return {
             bash = { "beautysh" },
 
             toml = { "tombi" },
+            xml = { "xmlformat" },
 
             java = { "google-java-format" },
 
