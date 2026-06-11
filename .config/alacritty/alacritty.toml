@@ -1,13 +1,9 @@
 # Alacritty Configuration
 
-[general]
-import = ["~/.config/alacritty/themes/themes/gruvbox_dark.toml"]
-
 [terminal]
 shell = "/bin/bash"
 
-# WINDOW
-
+# window
 [window]
 decorations = "None"
 opacity = 0.9
@@ -17,18 +13,12 @@ blur = true
 columns = 100
 lines = 30
 
-[window.padding]
-x = 5
-y = 5
-
-# SCROLLING
-
+# scrollback
 [scrolling]
 history = 4000
 multiplier = 5
 
-# FONT
-
+# font
 [font]
 size = 12
 
@@ -44,26 +34,10 @@ style = "Bold"
 family = "JetBrains Mono Nerd Font"
 style = "Italic"
 
-# SELECTION
-
+# clipboard
 [selection]
 save_to_clipboard = true
 
-# CURSOR
-
-[cursor]
-thickness = 0.2
-
-[cursor.style]
-#shape = "Beam"
-blinking = "On"
-
-# MOUSE
-
-[mouse]
-hide_when_typing = true
-
-# KEYBOARD
-
-[keyboard]
-bindings = [{ key = "CapsLock", mode = "Vi", action = "ToggleNormalSelection" }]
+# colorscheme
+[general]
+import = ["~/.config/alacritty/themes/themes/gruvbox_dark.toml"]
