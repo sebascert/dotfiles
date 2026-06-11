@@ -1,69 +1,76 @@
-set noswapfile
+"==============================================================================
+"misc
+"==============================================================================
 
-" insert tabs on newline
-set autoindent
+let mapleader=" " "set <leader>
 
-" solid underscore
-let &t_SI .= "\<Esc>[5 q"
+"==============================================================================
+"ui
+"==============================================================================
 
-" solid block
-let &t_EI .= "\<Esc>[1 q"
-  " 1 or 0 -> blinking block
-  " 3 -> blinking underscore
-  " Recent versions of xterm (282 or above) also support
-  " 5 -> blinking vertical bar
-  " 6 -> solid vertical bar
-
-" Set vi-nocompatible in case .vimrc is not present
-set nocompatible
-
-" Turn on syntax highlighting.
 syntax on
 
-" Disable the default Vim startup message.
-set shortmess+=I
-
-" Show line numbers.
 set number
-
-" Enable relative line numbering
 set relativenumber
 
-" Always show the status line at the bottom, even if you only have one window open.
-set laststatus=2
+set shortmess+=I "disable startup message
+set laststatus=2 "always show status line
 
-" Intuitive backspace behaviour
-set backspace=indent,eol,start
+set textwidth=79
+set colorcolumn=+1
+highlight ColorColumn ctermbg=darkred
 
-" Enable hidden buffers
-set hidden
+"solid block cursor
+let &t_SI="\<Esc>[2 q"
+let &t_EI="\<Esc>[2 q"
 
-" This setting makes search case-insensitive when all characters in the string
-" being searched are lowercase. However, the search becomes case-sensitive if
-" it contains any capital letters. This makes searching more convenient.
-set ignorecase
-set smartcase
+"==============================================================================
+"persistent
+"==============================================================================
 
-" Enable searching as you type, rather than waiting till you press enter.
-set incsearch
+set directory=~/.vim/.swap//
 
-" Unbind some useless/annoying default key bindings.
-nmap Q <Nop> " 'Q' in normal mode enters Ex mode. You almost never want this.
+set undofile
+set undodir=~/.vim/.undo//
 
-" Disable audible bell because it's annoying.
-set noerrorbells visualbell t_vb=
+set nobackup
+set nowritebackup
 
-" Enable mouse support
-set mouse+=a
+"==============================================================================
+"buffer
+"==============================================================================
 
-" Spaces instead of tabs
+set hidden "enable hidden buffers
+
+"==============================================================================
+"search
+"==============================================================================
+
+set incsearch "incremental search
+set smartcase "search is case insensitive unless it contains an uppercase
+
+"==============================================================================
+"indentation
+"==============================================================================
+
+set autoindent
+
 set expandtab
 set tabstop=4
 set shiftwidth=4
 set softtabstop=4
 
-" Makefile
-autocmd FileType make setlocal noexpandtab
-autocmd FileType make setlocal tabstop=4
-autocmd FileType make setlocal shiftwidth=4
-autocmd FileType make setlocal softtabstop=4
+"==============================================================================
+"completion menu
+"==============================================================================
+
+set wildmenu
+set completeopt=menu,menuone,noselect
+
+"==============================================================================
+"insert mode
+"==============================================================================
+
+set pastetoggle=<F2> "paste mode allows graceful pasting into the buffer
+
+set backspace=indent,start "enable indentation and pre-insert deletion
