@@ -27,8 +27,7 @@ local function config(_, opts)
             local lang = vim.treesitter.language.get_lang(ft) or ft
 
             -- only start if a parser exists/loads successfully
-            local ok = pcall(vim.treesitter.get_parser, bufnr, lang)
-            if not ok then
+            if not vim.treesitter.get_parser(bufnr, lang) then
                 return
             end
 
