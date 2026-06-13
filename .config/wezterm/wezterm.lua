@@ -23,13 +23,22 @@ config.window_padding = {
 config.scrollback_lines = 4000
 
 -- font
-config.font_size = 12
+config.font_size = 11
 
 config.font = wezterm.font_with_fallback({
 	"JetBrainsMono Nerd Font",
 })
 
+config.harfbuzz_features = {
+	"calt=0",
+	"clig=0",
+	"liga=0",
+}
+
 -- colorscheme
 config.color_scheme = "GruvboxDark"
+
+-- audio
+config.audible_bell = "Disabled"
 
 return config

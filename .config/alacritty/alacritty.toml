@@ -20,7 +20,7 @@ multiplier = 5
 
 # font
 [font]
-size = 12
+size = 11
 
 [font.normal]
 family = "JetBrains Mono Nerd Font"
