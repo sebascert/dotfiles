@@ -47,7 +47,10 @@ set hidden "enable hidden buffers
 "==============================================================================
 
 set incsearch "incremental search
-set smartcase "search is case insensitive unless it contains an uppercase
+
+"search is case insensitive unless it contains an uppercase
+set ignorecase
+set smartcase
 
 "==============================================================================
 "indentation
