@@ -27,7 +27,7 @@
 " This tests to see if vim was configured with the '--enable-cscope' option
 " when it was compiled.  If it wasn't, time to recompile vim... 
 if has("cscope")
-    set csprg=myscope2.pl
+    set csprg=cscope
 
     """"""""""""" Standard cscope/vim boilerplate
 
@@ -43,31 +43,38 @@ if has("cscope")
 "     if filereadable("cscope.out")
 "         cs add cscope.out  
 "     " else add the database pointed to by environment variable 
-"     elseif $CSCOPE_DB2 != ""
-" "        cs add $CSCOPE_DB2
+"     elseif $CSCOPE_DB != ""
+" "        cs add $CSCOPE_DB
 " 
 "         " Performace tweak to only load cscope db when not performing diff to
 "         " speed up review process
 "         if ! &diff
 "             " Reduce startup time by using 'au VimEnter'
-"             au VimEnter * cs add $CSCOPE_DB2
+"             au VimEnter * if cscope_connection() == 0 | cs add $CSCOPE_DB | endif
 "         endif
-"         nmap <F12> :cs add $CSCOPE_DB2<cr>
+"         nmap <F12> :if cscope_connection() == 0 | cs add $CSCOPE_DB | endif<cr>
 "     endif
 """""""""""""""""""""
 
-    "add the database pointed to by environment variable 
-    if $CSCOPE_DB2 != ""
-"        cs add $CSCOPE_DB2
-
-        " Performace tweak to only load cscope db when not performing diff to
-        " speed up review process
-        if ! &diff
-            " Reduce startup time by using 'au VimEnter'
-            au VimEnter * cs add $CSCOPE_DB2
+    " Add the cscope database pointed to by CSCOPE_DB when it is readable.
+    function! s:AddCscopeDb() abort
+        if $CSCOPE_DB == "" || cscope_connection() != 0
+            return
         endif
-        nmap <F12> :cs add $CSCOPE_DB2<cr>
+
+        try
+            if filereadable($CSCOPE_DB)
+                execute "cs add " . fnameescape($CSCOPE_DB)
+            endif
+        catch /^Vim\%((\a\+)\)\=:E563:/
+            " Ignore stale or unreachable CSCOPE_DB paths during startup.
+        endtry
+    endfunction
+
+    if ! &diff
+        au VimEnter * call <SID>AddCscopeDb()
     endif
+    nmap <F12> :call <SID>AddCscopeDb()<cr>
 
 
     " show msg when any other cscope db added
