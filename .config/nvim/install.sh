@@ -55,8 +55,4 @@ make CMAKE_BUILD_TYPE="$BUILD_TYPE"
 sudo make CMAKE_INSTALL_PREFIX="$PREFIX" install
 
 # install nvim lazy and mason packages
-nvim --headless \
-    -c "lua require('lazy').sync({ wait = true, show = false })"\
-    -c "MasonUpdate"\
-    -c "MasonLockRestore"\
-    -c "qa"
+nvim --headless -c "lua dofile(vim.fn.stdpath('config') .. '/bootstrap.lua')"

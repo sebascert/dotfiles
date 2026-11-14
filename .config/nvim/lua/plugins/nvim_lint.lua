@@ -132,6 +132,9 @@ return {
             ["*"] = { "codespell" },
         },
         linters = {
+            codespell = {
+                prepend_args = { "--ignore-words-list", "itesm" },
+            },
             shellcheck = {
                 prepend_args = { "--shell", "bash" },
             },
