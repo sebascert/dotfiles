@@ -61,6 +61,12 @@ trust_level = "trusted"
 [projects."/home/sebastian/projects/backup"]
 trust_level = "trusted"
 
+[projects."/home/sebastian/projects/hdp-kactl"]
+trust_level = "trusted"
+
+[projects."/home/sebastian/projects/icpc"]
+trust_level = "trusted"
+
 [features]
 memories = true
 memory_tool = true

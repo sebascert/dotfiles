@@ -5,17 +5,22 @@
 # 1. Dotfiles repository settings.
 # 2. Homebrew and its shell environment.
 # 3. CLI tools from .config/packages/Brewfile and their man pages.
+#    Passwordless sudo and Homebrew Bash as the user's login shell.
 # 4. Rust toolchain via rustup.
 # 5. NVM and Node.js LTS.
 # 6. Tools from .config/packages/npm.txt and pipx.txt.
 # 7. Neovim plugins and locked language tools.
 # 8. TPM and the tmux plugins listed in .tmux.conf.
 # 9. Synth-Shell prompt.
+# 10. GitHub CLI login.
 #
 # Dependencies:
 # - Bash
 # - Git
 # - curl
+# - sudo
+# - visudo
+# - chsh
 # - Dotfiles already checked out into $HOME
 #
 # Details:
@@ -23,7 +28,7 @@
 # - Uses the shell profiles and prompt configuration supplied by the dotfiles.
 # - Open a new Bash session after installation to load the environment.
 
-set -eo pipefail
+# set -eo pipefail
 
 if [[ ${EUID} -eq 0 ]]; then
     echo 'Run this script as your normal user, not with sudo.' >&2
@@ -71,7 +76,31 @@ if ! command -v brew >/dev/null; then
 fi
 
 # 3. CLI tools
-brew bundle install --file="$HOME/.config/packages/Brewfile"
+brew bundle install --file="$HOME/.config/packages/Brewfile" || exit 1
+
+# Configure the account, using the stable Homebrew symlink across upgrades.
+brew_shell="$(brew --prefix)/bin/bash" || exit 1
+if [[ ! -x "$brew_shell" ]]; then
+    echo "Homebrew Bash is missing: $brew_shell" >&2
+    exit 1
+fi
+current_user=$(id -un) || exit 1
+current_uid=$(id -u) || exit 1
+printf '#%s ALL=(ALL:ALL) NOPASSWD: ALL\n' "$current_uid" > "$workdir/sudoers" || exit 1
+sudo visudo -cf "$workdir/sudoers" || exit 1
+sudo mkdir -p /etc/sudoers.d || exit 1
+sudo install -o 0 -g 0 -m 0440 "$workdir/sudoers" \
+    "/etc/sudoers.d/99-dotinstall-$current_uid" || exit 1
+sudo visudo -c || exit 1
+# Check without cached credentials, including whether sudoers.d is enabled.
+sudo -n -k true || {
+    echo 'Passwordless sudo is not active; check /etc/sudoers includes /etc/sudoers.d.' >&2
+    exit 1
+}
+if ! grep -Fxq "$brew_shell" /etc/shells; then
+    printf '\n%s\n' "$brew_shell" | sudo tee -a /etc/shells >/dev/null || exit 1
+fi
+sudo chsh -s "$brew_shell" "$current_user" || exit 1
 
 # shellcheck source=/dev/null
 source "$HOME/.local/bin/env"
@@ -146,9 +175,9 @@ if [[ ! -f "$HOME/.config/synth-shell/synth-shell-prompt.sh" ]]; then
         "$HOME/.config/synth-shell/synth-shell-prompt.sh"
 fi
 
-printf '\nInstallation complete. Open a new Bash session to load your dotfiles.\n'
-echo 'After GitHub login, run gh auth setup-git to refresh credential-helper paths.'
+# 10. GitHub CLI
+gh auth status --hostname github.com >/dev/null 2>&1 || \
+    gh auth login --hostname github.com --web --git-protocol ssh \
+        --skip-ssh-key --clipboard || exit 1
 
-if [[ "$system" == Darwin ]]; then
-    echo "Select $HOMEBREW_PREFIX/bin/bash as your terminal shell on macOS."
-fi
+printf '\nInstallation complete. Log out and back in to use Homebrew Bash.\n'

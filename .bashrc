@@ -12,6 +12,11 @@ export MANPAGER='nvim +Man!'
 
 # load bash env
 source "$HOME/.local/bin/env"
+
+if ! shopt -oq posix && [[ -r ${HOMEBREW_PREFIX:-}/share/bash-completion/bash_completion ]]; then
+    source "$HOMEBREW_PREFIX/share/bash-completion/bash_completion"
+fi
+
 BASH_DIRS=(
     "$HOME/.bash/core"
     "$HOME/.bash/config"
@@ -26,15 +31,6 @@ for dir in "${BASH_DIRS[@]}"; do
         find "$dir" \( -type f -o -type l \) -name '*.sh' -print0 | sort -z
     )
 done
-
-# load bash completion
-if ! shopt -oq posix; then
-    if [ -f /usr/share/bash-completion/bash_completion ]; then
-        source /usr/share/bash-completion/bash_completion
-    elif [ -f /etc/bash_completion ]; then
-        source /etc/bash_completion
-    fi
-fi
 
 # history configs
 HISTCONTROL=ignoreboth
