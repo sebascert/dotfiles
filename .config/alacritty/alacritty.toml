@@ -20,3 +20,39 @@ size = 12
 # clipboard
 [selection]
 save_to_clipboard = true
+
+# Send Command-key shortcuts to tmux as Meta-key sequences.
+[[keyboard.bindings]]
+key = "A"
+mods = "Command"
+chars = "\u001ba"
+
+[[keyboard.bindings]]
+key = "H"
+mods = "Command"
+chars = "\u001bh"
+
+[[keyboard.bindings]]
+key = "J"
+mods = "Command"
+chars = "\u001bj"
+
+[[keyboard.bindings]]
+key = "K"
+mods = "Command"
+chars = "\u001bk"
+
+[[keyboard.bindings]]
+key = "L"
+mods = "Command"
+chars = "\u001bl"
+
+[[keyboard.bindings]]
+key = "S"
+mods = "Command"
+chars = "\u001bs"
+
+[[keyboard.bindings]]
+key = "R"
+mods = "Command"
+chars = "\u001br"
