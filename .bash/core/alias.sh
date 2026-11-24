@@ -33,8 +33,8 @@ alias http-server='python3 -m http.server -b 127.0.0.1'
 
 alias tree='eza -T --git-ignore --group-directories-first --all'
 
-alias ccp='xclip -selection clipboard'
-alias cpt='xclip -selection clipboard -o'
+alias xcp='xclip -selection clipboard'
+alias xpt='xclip -selection clipboard -o'
 
-alias cnow='date +"%H:%M" | xclip -selection clipboard'
-alias today='date +"%d-%m-%Y" | xclip -selection clipboard'
+alias cnow='date +"%H:%M" | ccp'
+alias today='date +"%d-%m-%Y" | ccp'
